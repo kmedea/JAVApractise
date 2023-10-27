@@ -26,6 +26,11 @@ public class Main {
         // a kiértékelés hiszen a végeredmény mindenképpen false lesz ezért az i++ nem hajtódik végre így az i értéke ebben az esetben nem lesz megnövelve
 
         // && helyett & használunk, akkor mindenképpen végigmegy a kiértékelés a teljes kifejezésen, akkor is ha az első false
+        int x = 10;
+        boolean bool = false; // vagy esetén ha az első érték true akkor rövidre zár és már a másodikat nem is nézi, hiszen a végeredmény mindenképpen true lesz
+        boolean result = bool || x++>1;
+        System.out.println(result);
+        System.out.println(x);
 
 
     }
