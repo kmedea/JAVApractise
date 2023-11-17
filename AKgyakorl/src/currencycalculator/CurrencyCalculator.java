@@ -12,34 +12,59 @@ import java.util.Scanner;
  */
 public class CurrencyCalculator {
     public static void main(String[] args) {
+//        Scanner scanner = new Scanner(System.in);
+//        int[] currencies = {20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5};
+//        int[] pieces = new int[currencies.length];
+//        boolean isPositive = true;
+//        boolean isValid = true;
+//        System.out.print("Kérem, adja meg a pénzösszeget: ");
+//        firstdo:
+//        do {
+//            int moneyAmount = scanner.nextInt();
+//            System.out.println("Az ön által megadott összeg: " + moneyAmount);
+//            if (moneyAmount < 0) {
+//                System.out.println("A megadott összeg nem lehet negatív szám, kérem adja meg újra a pénzösszeget.");
+//                isPositive = false;
+//            } else {
+//                int remainingAmount = moneyAmount;
+//                if (remainingAmount % 5 != 0) {
+//                    System.out.println("A megadott összeg nullára vagy ötre végződhet, kérem adjon meg megfelelő összeget!");
+//                    isPositive = false;
+//                    continue firstdo;
+//                } else {
+//                    for (int i = 0; i < currencies.length; i++) {
+//                        pieces[i] = remainingAmount / currencies[i];
+//                        remainingAmount = remainingAmount % currencies[i];
+//                    }
+//                    isPositive = true;
+//                }
+//                System.out.println(Arrays.toString(pieces));
+//            }
+//        } while (!isPositive);
+
         Scanner scanner = new Scanner(System.in);
-        int[] currencies = {20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5};
-        int[] pieces = new int[currencies.length];
-        boolean isPositive = true;
-        boolean isValid = true;
-        System.out.print("Kérem, adja meg a pénzösszeget: ");
-       firstdo:
-       do {
-            int moneyAmount = scanner.nextInt();
+        int moneyAmount;
+        do {
+            System.out.println("Kérem, adja meg a pénzösszeget: ");
+            moneyAmount = scanner.nextInt();
+            System.out.println("A megadott pénzösszeg: " + moneyAmount);
             if (moneyAmount < 0) {
-                System.out.println("A megadott összeg nem lehet negatív szám, kérem adja meg újra a pénzösszeget.");
-                isPositive = false;
-            } else {
-                    int remainingAmount = moneyAmount;
-                    if (remainingAmount % 5 != 0) {
-                        System.out.println("A megadott összeg nullára vagy ötre végződhet, kérem adjon meg megfelelő összeget!");
-                        isPositive = false;
-                        continue firstdo;
-                    } else {
-                        for (int i = 0; i < currencies.length; i++) {
-                            pieces[i] = remainingAmount / currencies[i];
-                            remainingAmount = remainingAmount % currencies[i];
-                        }
-                        isPositive = true;
-                    }
-                System.out.println(Arrays.toString(pieces));
+                System.out.println("Negatív pénzösszeg nem adható meg");
             }
-       } while (!isPositive);
+            if (moneyAmount % 5 != 0) {
+                System.out.println("A megadott pnzösszeg nem fizethető ki, mert nem ostható 5-tel!");
+            }
+        } while (moneyAmount < 0 || moneyAmount % 5 != 0);
+        int[] currencies = {20000, 10000, 5000, 2000, 1000, 500, 200, 100, 50, 20, 10, 5};
+        int remainingAmount = moneyAmount;
+        int[] pieces = new int[currencies.length];
+        for (int i = 0; i < currencies.length; i++) {
+            pieces[i] = remainingAmount / currencies[i];
+            remainingAmount = remainingAmount % currencies[i];
+        }
+        for (int i=0; i < currencies.length; i++) {
+            System.out.println(currencies[i] + ": "+pieces[i] + " db");
         }
     }
+}
 
