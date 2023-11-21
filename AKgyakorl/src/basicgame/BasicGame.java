@@ -6,12 +6,18 @@ public class BasicGame {
     public static void main(String[] args) throws InterruptedException {
         String[][] level = new String[10][10];
         String playerMark = "O";
-        int row = 2;
-        int column = 2;
+        int row = 1;
+        int column = 1;
         Direction direction = Direction.RIGHT;
         //pálya inicializálása
-        for (String[] strings : level) {
-            Arrays.fill(strings, "_");
+        for (int i = 0; i < level.length; i++) {
+            for (int j = 0; j <level[i].length; j++) {
+                if(i == 0 || i == 9 || j == 0 || j == 9){
+                    level[i][j] = "X";
+                } else {
+                    level[i][j] = " ";
+                }
+            }
         }
         for(int i = 0; i < 10; i++) {
             switch(direction) {
@@ -36,7 +42,7 @@ public class BasicGame {
                 System.out.println();
             }
 
-            System.out.println("++++++++");
+            System.out.println("----------");
             Thread.sleep(1_000L);
         }
     }
