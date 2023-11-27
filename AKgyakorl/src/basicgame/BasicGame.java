@@ -1,19 +1,16 @@
 package basicgame;
 
-import java.sql.SQLOutput;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.Random;
-import java.util.SimpleTimeZone;
 
 public class BasicGame {
 
-    static int width = 10; //osztályváltozók
-    static int height = 10;
+    static final int WIDTH = 15; //osztályváltozók
+    static final int HEIGHT = 15;
     static Random random = new Random();
+
     public static void main(String[] args) throws InterruptedException {
 
-        String[][] level = new String[height][width];
+        String[][] level = new String[HEIGHT][WIDTH];
 
         String playerMark = "O";
         int playerRow = 2;
@@ -21,12 +18,12 @@ public class BasicGame {
         Direction playerDirection = Direction.RIGHT;
 
         String enemyMark = "S";
-        int enemyRow = 3;
-        int enemyColumn = 4;
+        int enemyRow = 5;
+        int enemyColumn = 7;
         Direction enemyDirection = Direction.LEFT;
 
         initLevel(level); //pálya inicializálása - a null helyett ez tölti fel a kétdimenziós tömböt szóközzel és X-el
-        addRandomWall(level, 1,1);
+        addRandomWall(level, 1, 1);
 
         for (int i = 1; i <= 100; i++) {
             // játékos léptetése
@@ -38,21 +35,39 @@ public class BasicGame {
             playerRow = makeMove(playerDirection, level, playerRow, playerColumn)[0];
             playerColumn = makeMove(playerDirection, level, playerRow, playerColumn)[1];
 
-            //ellenfél léptetése
-            if (i % 10 == 0) {
-                //irányváltoztatás
-                enemyDirection= changeDirection(enemyDirection);
+
+            // ellenfél irányváltoztatás
+            enemyDirection = changeEnemyDirection(level, enemyDirection, playerRow, playerColumn, enemyRow, enemyColumn);
+
+            // az ellenfél legyen fele olyan gyors mint a játékos
+            if(i % 2 == 0) {
+                enemyRow = makeMove(enemyDirection, level, enemyRow, enemyColumn)[0];
+                enemyColumn = makeMove(enemyDirection, level, enemyRow, enemyColumn)[1];
             }
-            enemyRow = makeMove(enemyDirection, level, enemyRow, enemyColumn)[0];
-            enemyColumn = makeMove(enemyDirection, level, enemyRow, enemyColumn)[1];
             // kirajzolás
             draw(level, playerMark, playerRow, playerColumn, enemyMark, enemyRow, enemyColumn);
             addSomeDelay(500L);
-            if(playerRow == enemyRow && playerColumn == enemyColumn){
+            if (playerRow == enemyRow && playerColumn == enemyColumn) {
                 break;
             }
         }
         System.out.println("Játék vége!");
+    }
+
+    static Direction changeEnemyDirection(String[][] level, Direction originalEnemyDirection, int playerRow, int playerColumn, int enemyRow, int enemyColumn) {
+        if(playerRow<enemyRow && level[enemyRow-1][enemyColumn].equals(" ")){
+            return Direction.UP;
+        }
+        if(playerRow>enemyRow && level[enemyRow+1][enemyColumn].equals(" ")){
+            return Direction.DOWN;
+        }
+        if(playerColumn<enemyColumn && level[enemyRow][enemyColumn-1].equals(" ")){
+            return Direction.LEFT;
+        }
+        if(playerColumn>enemyColumn && level[enemyRow][enemyColumn+1].equals(" ")){
+            return Direction.RIGHT;
+        }
+        return originalEnemyDirection;
     }
 
     static void initLevel(String[][] level) {
@@ -67,28 +82,30 @@ public class BasicGame {
         }
     }
 
-    static void addRandomWall (String[][] level, int numberOfHorizontalWalls, int numberOfVerticalWalls){
-        for(int i = 0; i< numberOfHorizontalWalls; i++){
+    static void addRandomWall(String[][] level, int numberOfHorizontalWalls, int numberOfVerticalWalls) {
+        for (int i = 0; i < numberOfHorizontalWalls; i++) {
             addHorizontalWall(level);
         }
-        for(int i = 0; i< numberOfVerticalWalls; i++){
+        for (int i = 0; i < numberOfVerticalWalls; i++) {
             addVerticalWall(level);
         }
     }
-    static void addHorizontalWall (String[][] level){
-        int wallWidth = random.nextInt(width-3); // ha adung határt, akkor a 0 és az adott számnál eggyel kisebb számig sorsol
-        int wallRow = random.nextInt(height - 2) + 1;
-        int wallColumn = random.nextInt(width-2 - wallWidth);
-        for(int i = 0; i < wallWidth; i++) {
-            level[wallRow][wallColumn+i] = "X";
+
+    static void addHorizontalWall(String[][] level) {
+        int wallWidth = random.nextInt(WIDTH - 3); // ha adung határt, akkor a 0 és az adott számnál eggyel kisebb számig sorsol
+        int wallRow = random.nextInt(HEIGHT - 2) + 1;
+        int wallColumn = random.nextInt(WIDTH - 2 - wallWidth);
+        for (int i = 0; i < wallWidth; i++) {
+            level[wallRow][wallColumn + i] = "X";
         }
     }
-    static void addVerticalWall (String[][] level){
-        int wallHeight = random.nextInt(height-3); // ha adung határt, akkor a 0 és az adott számnál eggyel kisebb számig sorsol
-        int wallRow = random.nextInt(height-2-wallHeight);
-        int wallColumn = random.nextInt(width-2)+1;
-        for(int i = 0; i < wallHeight; i++) {
-            level[wallRow+i][wallColumn] = "X";
+
+    static void addVerticalWall(String[][] level) {
+        int wallHeight = random.nextInt(HEIGHT - 3); // ha adung határt, akkor a 0 és az adott számnál eggyel kisebb számig sorsol
+        int wallRow = random.nextInt(HEIGHT - 2 - wallHeight);
+        int wallColumn = random.nextInt(WIDTH - 2) + 1;
+        for (int i = 0; i < wallHeight; i++) {
+            level[wallRow + i][wallColumn] = "X";
         }
     }
 
@@ -115,7 +132,7 @@ public class BasicGame {
                 }
             }
         }
-        return new Integer[] {row, column};
+        return new Integer[]{row, column};
     }
 
     static Direction changeDirection(Direction direction) {
@@ -133,7 +150,7 @@ public class BasicGame {
             for (int j = 0; j < board[k].length; j++) {
                 if (k == x && j == y && !board[k][j].equals("X")) {
                     System.out.print(mark);
-                }else if (k == enemyRaw && j == enemyColumn && !board[k][j].equals("X")){
+                } else if (k == enemyRaw && j == enemyColumn && !board[k][j].equals("X")) {
                     System.out.print(enemyMark);
                 } else {
                     System.out.print(board[k][j]);
@@ -142,6 +159,7 @@ public class BasicGame {
             System.out.println();
         }
     }
+
     static void addSomeDelay(long timeout) throws InterruptedException {
         System.out.println("----------");
         Thread.sleep(timeout);
@@ -157,4 +175,7 @@ public class BasicGame {
     // bemeneti paraméterként kapja meg a karakter aktuális sor és oszlop adatát, visszatérési értékként adja vissza az új koordinátákat egy int tömbben
     // 3. ha az ellenfél koordinátája megegyezik a játékos koordinátájával, akkor álljon le és írja ki, hogy játék vége
     // 4. legyen valahol egy függőleges és egy vízszintes fal a pályán belül ennek elhelyezését egy külön metódus végezze
+
+    //Házi:
+
 }
