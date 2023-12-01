@@ -176,6 +176,15 @@ public class BasicGame {
     // 3. ha az ellenfél koordinátája megegyezik a játékos koordinátájával, akkor álljon le és írja ki, hogy játék vége
     // 4. legyen valahol egy függőleges és egy vízszintes fal a pályán belül ennek elhelyezését egy külön metódus végezze
 
-    //Házi:
+    //Házi: 1. két függőleges és három vízszintes fal véletlenszerű generálása
+    // 2. a játékos és az ellenfél véletlenszerűen legyen elhelyezve a pályán, úgy hogy ne kerüljenek falra és ne kerüljenek egymáshoz túl közel
+    // legalább tíz lépés távolságra legyenek egymástól
+    // 3. power-up a csillag karakter jelképezze - minden 20. iterációban kerüljön pályára véletlenszerűen egy power-up. Ha a power-up-ra rálép a játékos
+    // akkor az ellenfél menekülni kezd, vagyis mindig elfele lép tőle, megpróbál minél távolabb kerülni a játékostól.
+    // Ha a játékos a power-uphatása alatt elkapja az ellenfelet, akkor nyer. Ezt egy külön üzenettel jelezzük és a játék érjen véget!
+    // A power up csak 20 lépésig aktív miután a játékos felvette után a ahatása megszűnik, az ellenfél újra a játékos irányába lépjen.
+    //Ha a power-up-ot a játékos felveszi, akkor ezt egy rövid üzenet jelezze minden olyan körben, amikor még akítv a hatása. Ha a játékos nem veszi fel a power-upot 20 körön keresztül,
+    // akkor tűnjön el 20 körre, majd 20 kör után megint jelenjen meg véletlenszerűen valahol a pályán (de ne a falba!)
+    // A játékos ne csak körbe körbe menjen ha van power-up a pályán, hanem próblja meg felvenni. Ha felvette, akor próbálja meg elkapni az ellenfelet.
 
 }
