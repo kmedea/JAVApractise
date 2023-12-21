@@ -105,7 +105,7 @@ public class BasicGame {
         Direction escapeDirection = getOppositeDirection(directionTowardsPlayer);
         switch (escapeDirection){
             case UP:
-            if(level[enemyRow-1][enemyColumn].equals(" ")){
+            if(level[enemyRow-1][enemyColumn].equals(" ")){ //39:13 a videóban
                 return escapeDirection;
             } else if (level[enemyRow][enemyColumn-1].equals("")){
 
