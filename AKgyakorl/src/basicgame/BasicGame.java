@@ -6,16 +6,19 @@ public class BasicGame {
 
     static final int WIDTH = 25; //osztályváltozók
     static final int HEIGHT = 25;
-    static Random random = new Random(100);
+    static Random random = new Random(); //álvéletlen számok - seed megadásnál mindig ua. véletlen számokat ad meg a rendszer
 
     public static void main(String[] args) throws InterruptedException {
 
         String[][] level = new String[HEIGHT][WIDTH];
+        int counter = 0;
 
         do {
             initLevel(level); //pálya inicializálása - a null helyett ez tölti fel a kétdimenziós tömböt szóközzel és X-el
-            addRandomWall(level, 3, 2);
-        } while (!isPassable(level));
+            addRandomWall(level, 5, 3);
+            counter++;
+        } while (!isPassable(level)); // addig próbálkozzon, amig nem teljesen átjárható a pálya
+        System.out.println(counter+".pálya átjárható.");
 
         String playerMark = "O";
         int[] playerCoordinates = getRandomStartingCoordinates(level); // 0-dik elemén lesz a sor, első elemén pedig az oszlop
@@ -129,8 +132,69 @@ public class BasicGame {
         }
     }
 
-    static boolean isPassable(String[][] level) {
-        
+    static boolean isPassable(String[][] level) { // van-e rajta olyan rész ami teljesen le van választva a pálya többi részétől vagy sem
+        String[][] levelCopy = copy(level); // pálya lemásolása
+
+        outer:
+        for (int row = 0; row < HEIGHT; row++) { // első szóköz megkeresése és csillaggal feltöltése
+            for (int column = 0; column < WIDTH; column++) {
+                if (" ".equals(levelCopy[row][column])) {
+                    levelCopy[row][column] = "*";
+                    break outer;
+                }
+            }
+        }
+        while (spreadAsterisks(levelCopy)){
+        }
+        // pályamásolat vizsgálata: maradt-e szóköz valahol
+        for (int row = 0; row < HEIGHT; row++) { // első szóköz megkeresése és csillaggal feltöltése
+            for (int column = 0; column < WIDTH; column++) {
+                if (" ".equals(levelCopy[row][column])) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    static boolean spreadAsterisks(String[][] levelCopy) {
+        boolean change = false;
+        for (int row = 0; row < HEIGHT; row++) { // további szabad helyek megkeresése és csillagokkal feltöltése
+            for (int column = 0; column < WIDTH; column++) {
+                if ("*".equals(levelCopy[row][column])) {
+                    if (" ".equals(levelCopy[row - 1][column])) {
+                        levelCopy[row - 1][column] = "*";
+                        change = true;
+                    }
+                    if (" ".equals(levelCopy[row + 1][column])) {
+                        levelCopy[row + 1][column] = "*";
+                        change = true;
+                    }
+                    if (" ".equals(levelCopy[row][column - 1])) {
+                        levelCopy[row][column - 1] = "*";
+                        change = true;
+                    }
+                    if (" ".equals(levelCopy[row][column + 1])) {
+                        levelCopy[row][column + 1] = "*";
+                        change = true;
+                    }
+                }
+            }
+        }
+        return change;
+    }
+
+    // ha ezek után marad az eredeti pályán szóköz, akkor az azt jelenti, hogy van olyan rész, amit a falak teljesen elszeparáltak a többi résztől és oda a csillagok
+    // nem tudtak terjedni, így továbbiakban azt kell megvizsgálni, hogy maradt-e szóköz a pályán
+
+    static String[][] copy(String[][] level) {
+        String[][] copy = new String[HEIGHT][WIDTH];
+        for (int row = 0; row < HEIGHT; row++) {
+            for (int column = 0; column < WIDTH; column++) {
+                copy[row][column] = level[row][column];
+            }
+        }
+        return copy;
     }
 
     static Direction getEscapeDirection(String[][] level, int enemyRow, int enemyColumn, Direction directionTowardsPlayer) {
