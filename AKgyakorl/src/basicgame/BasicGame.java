@@ -17,7 +17,7 @@ public class BasicGame {
             initLevel(level); //pálya inicializálása - a null helyett ez tölti fel a kétdimenziós tömböt szóközzel és X-el
             addRandomWall(level, 5, 3);
             counter++;
-        } while (!isPassable(level)); // addig próbálkozzon, amig nem teljesen átjárható a pálya
+        } while (!isPassable(level)); // addig próbálkozzon, amig nem teljesen átjárható a pálya, ha átjárható, akkor áljon le
         System.out.println(counter+".pálya átjárható.");
 
         String playerMark = "O";
@@ -132,11 +132,12 @@ public class BasicGame {
         }
     }
 
-    static boolean isPassable(String[][] level) { // van-e rajta olyan rész ami teljesen le van választva a pálya többi részétől vagy sem
-        String[][] levelCopy = copy(level); // pálya lemásolása
+    static boolean isPassable(String[][] level) { // van-e rajta olyan rész ami teljesen le van választva a pálya többi részétől vagy sem, átjárható-e a pálya
+
+        String[][] levelCopy = copy(level); // pálya lemásolása (csinál egy olyan tömböt mint a bemeneti tömb)
 
         outer:
-        for (int row = 0; row < HEIGHT; row++) { // első szóköz megkeresése és csillaggal feltöltése
+        for (int row = 0; row < HEIGHT; row++) { // megkeresem az első üres helyet, majd feltöltöm *-gal - csak a leges legelső szóközt keresem meg
             for (int column = 0; column < WIDTH; column++) {
                 if (" ".equals(levelCopy[row][column])) {
                     levelCopy[row][column] = "*";
@@ -144,15 +145,17 @@ public class BasicGame {
                 }
             }
         }
-        while (spreadAsterisks(levelCopy)){
-        }
-        // pályamásolat vizsgálata: maradt-e szóköz valahol
-        for (int row = 0; row < HEIGHT; row++) { // első szóköz megkeresése és csillaggal feltöltése
-            for (int column = 0; column < WIDTH; column++) {
-                if (" ".equals(levelCopy[row][column])) {
-                    return false;
+
+        while (spreadAsterisks(levelCopy)){ //amig törté
+            // pályamásolat vizsgálata: maradt-e szóköz valahol
+            for (int row = 0; row < HEIGHT; row++) {
+                for (int column = 0; column < WIDTH; column++) {
+                    if (" ".equals(levelCopy[row][column])) {
+                        return false;
+                    }
                 }
             }
+
         }
         return true;
     }
@@ -162,7 +165,7 @@ public class BasicGame {
         for (int row = 0; row < HEIGHT; row++) { // további szabad helyek megkeresése és csillagokkal feltöltése
             for (int column = 0; column < WIDTH; column++) {
                 if ("*".equals(levelCopy[row][column])) {
-                    if (" ".equals(levelCopy[row - 1][column])) {
+                    if (" ".equals(levelCopy[row - 1][column])) {// ha a csillag fölötti helyen szóköz van, akkor oda is teszek egy csillagot
                         levelCopy[row - 1][column] = "*";
                         change = true;
                     }
@@ -303,6 +306,7 @@ public class BasicGame {
         return originalEnemyDirection;
     }
 
+    //inicializálja a pályát:
     static void initLevel(String[][] level) {
         for (int i = 0; i < level.length; i++) {
             for (int j = 0; j < level[i].length; j++) {
