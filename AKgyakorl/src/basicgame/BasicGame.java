@@ -15,10 +15,10 @@ public class BasicGame {
 
         do {
             initLevel(level); //pálya inicializálása - a null helyett ez tölti fel a kétdimenziós tömböt szóközzel és X-el
-            addRandomWall(level, 5, 3);
+            addRandomWall(level, 6, 6);
             counter++;
         } while (!isPassable(level)); // addig próbálkozzon, amig nem teljesen átjárható a pálya, ha átjárható, akkor áljon le
-        System.out.println(counter+".pálya átjárható.");
+        System.out.println(counter + ".pálya átjárható.");
 
         String playerMark = "O";
         int[] playerCoordinates = getRandomStartingCoordinates(level); // 0-dik elemén lesz a sor, első elemén pedig az oszlop
@@ -146,17 +146,21 @@ public class BasicGame {
             }
         }
 
-        while (spreadAsterisks(levelCopy)){ //amig törté
-            // pályamásolat vizsgálata: maradt-e szóköz valahol
-            for (int row = 0; row < HEIGHT; row++) {
-                for (int column = 0; column < WIDTH; column++) {
-                    if (" ".equals(levelCopy[row][column])) {
-                        return false;
-                    }
-                }
-            }
+        while (spreadAsterisks(levelCopy)) { // *-ok terjesztése a szabad helyekre
 
         }
+
+        // pályamásolat vizsgálata: maradt-e szóköz valahol
+        //ha találok egy szóközt, akkor egyből false-al tér vissza
+        //ha egyszer sem teljesül, hogy szóköz van a pályán, akkor egyszer sem lép be a belső if-be, átugorja, így majd a végén return true-val tér vissza
+        for (int row = 0; row < HEIGHT; row++) {
+            for (int column = 0; column < WIDTH; column++) {
+                if (" ".equals(levelCopy[row][column])) {
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 
