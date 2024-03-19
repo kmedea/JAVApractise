@@ -163,11 +163,10 @@ public class BasicGame {
 
         return true;
     }
-
-    static boolean spreadAsterisks(String[][] levelCopy) {
+    static boolean spreadAsterisks(String[][] levelCopy, boolean check, int rowToCheck, int columnToCheck) {
         boolean change = false;
         for (int row = 0; row < HEIGHT; row++) { // további szabad helyek megkeresése és csillagokkal feltöltése
-            for (int column = 0; column < WIDTH; column++) {
+            for (int column = 0; column < WIDTH; column++) { // ez a rész akkor fontos, ha a legrövidebb utat keressük a két pont között
                 if ("*".equals(levelCopy[row][column])) {
                     if (" ".equals(levelCopy[row - 1][column])) {// ha a csillag fölötti helyen szóköz van, akkor oda is teszek egy csillagot
                         levelCopy[row - 1][column] = "*";
@@ -410,6 +409,24 @@ public class BasicGame {
     static void addSomeDelay(long timeout) throws InterruptedException {
         System.out.println("----------");
         Thread.sleep(timeout);
+    }
+
+    //legrövidebb út keresésekor szintén a csillagterjesztéses módszert használjuk, csak fordítva a célpontból kezdjük el a csillagokat terjeszteni a kiindulási ponthoz
+    static Direction getShortestPath(String[][] level, int fromRow, int fromColumn, int toRow, int toColumn){
+        //első lépésben lemásoljuk a pályát
+        String[][] levelCopy = copy(level);
+
+        //első csillag lehelyezése a célpontra
+        levelCopy[toRow][toColumn] = "*";
+
+        // *-ok terjesztése a szabad helyekre - a terjesztés közben ha elérjük a kiindulási hely melletti mezőt, akkor készen is vagyunk
+        while(spreadAsterisksWithCheck(levelCopy, fromRow, fromColumn));
+
+    }
+
+    private static boolean spreadAsterisksWithCheck(String[][] levelCopy, int fromRow, int fromColumn) {
+
+
     }
     // feladat: 1. pályának legyen egy kerete pl: X
     // 2. bármilyen irányba megy a karakter, ha egy falba ütközik, akkor ne lépjen arra tovább, hanem maradjon egyhelyben
