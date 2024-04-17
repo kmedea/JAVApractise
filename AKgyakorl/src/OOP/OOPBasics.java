@@ -1,5 +1,6 @@
 package OOP;
 
+
 public class OOPBasics {
 
     /* OOP -  Object Oriented Programming
@@ -46,7 +47,13 @@ public class OOPBasics {
      */
 
     /* egységbezárás:
-    értékek és hozzájuk tartozó műveletek egységbe zárása
+    értékek és hozzájuk tartozó műveletek egységbe zárása - az egységbezárás egyig nagyon fontos eleme, hogy el tudjuk rejteni az adatot - amikor osztály változót hozunk létre, akkor általában
+    azokat private-ként hozzuk létre, hogy más osztályok számára ne legyen látható
+    innentől használjuk a gettereket és settereket
+    private - csak az adott osztályban látszik
+    public - mindenhonnan látható
+
      */
+
 
 }
